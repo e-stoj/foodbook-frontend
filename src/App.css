@@ -1,0 +1,9 @@
+.App {
+  text-align: center;
+  background-image: url('./assets/bg.jpeg');
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+

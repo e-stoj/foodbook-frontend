@@ -1,0 +1,39 @@
+.search-friends {
+  height: 85vh;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  width: 90vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.search-span {
+  margin: 10px;
+  font-weight: 500;
+}
+
+.search-input {
+  margin: 10px;
+  border: none;
+  width: 50%;
+  height: 20px;
+}
+
+.search-button {
+  border: none;
+  background-color: gray;
+  color: white;
+  padding: 10px 15px 10px 15px;
+  margin: 10px;
+}
+
+.search-friend-result {
+  margin-top: 15%;
+  width: 80%;
+  display: flex;
+  justify-content: space-around;
+  font-weight: bold;
+}
+
+
