@@ -13,10 +13,12 @@ import './App.css';
 
 class App extends Component {
   render() {
+    const { online } = this.props;
     return (
       <div className="App">
+        {/* {!online && (<Redirect to='/login' />)} */}
         <Switch>
-          <Route exact path='/login' component={LoginPage} />
+          <Route path='/login' component={LoginPage} />
           <Route path='/home' component={HomePage} />
           <Route path='/registration' component={RegistrationPage} />
           <Route path='/search' component={SearchPage} />
@@ -24,9 +26,14 @@ class App extends Component {
           <Route path='/event' component={EventPage} />
           <Route path='/locals' component={LocalsPage} />
         </Switch> 
+        
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  online: state.sessionUser.online
+});
+
+export default withRouter(connect(mapStateToProps)(App));

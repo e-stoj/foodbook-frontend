@@ -52,8 +52,8 @@ class HomePage extends Component {
           </div>
           <div className='home'>
             <div className='friends-list'>
-              <span>Witaj { activeUser.name }</span>
-              {friends.map(friend => <div>{friend.name} {friend.surname}</div>)}
+              <span>Lista znajomych użytkownika { activeUser.name } {activeUser.surname}</span>
+              {friends.map(friend => <div className='friend'>{friend.name} {friend.surname}</div>)}
             </div>
             <div className='events'>
             {events.map(event => 

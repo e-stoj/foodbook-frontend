@@ -13,8 +13,14 @@ export const GET_USER_EVENTS = 'events: get-user-events';
 const GET_USER_EVENTS_SUCCESS = 'events: get-user-events-success';
 const GET_USER_EVENTS_FAILURE = 'events: get-user-events-failure';
 export const ADD_NEW_EVENT = 'events: add-new-event';
-const ADD_NEW_EVETN_SUCCESS = 'events: add-new-event-success';
+const ADD_NEW_EVENT_SUCCESS = 'events: add-new-event-success';
 const ADD_NEW_EVENT_FAILURE = 'events: add-new-event-failure';
+export const UPDATE_EVENT = 'events: update-event';
+const UPDATE_EVENT_SUCCESS = 'events: update-event-success';
+const UPDATE_EVENT_FAILURE = 'events: update-event-failure';
+export const DELETE_EVENT = 'events: delete-event';
+const DELETE_EVENT_SUCCESS = 'events: delete-event-success';
+const DELETE_EVENT_FAILURE = 'events: delete-event-failure';
 export const ADD_NEW_MESSAGE = 'events: add-new-message';
 const ADD_NEW_MESSAGE_SUCCESS = 'events: add-new-message-success';
 const ADD_NEW_MESSAGE_FAILURE = 'events: add-new-message-failure';
@@ -62,7 +68,24 @@ export const addNewEvent = (localId, event, query) => (dispatch, getState) => {
   
   eventApi.addEvent(localId, event, query)
     .then(() => dispatch(addNewEventSuccess()))
+    .then(() => dispatch(push('/home')))
     .catch(() => dispatch(addNewEventFailure()));
+}
+
+export const updateEvent = (id) => (dispatch, getState) => {
+  dispatch({ type: UPDATE_EVENT });
+  
+  eventApi.updateEvent(id)
+    .then(() => dispatch(updateEventSuccess()))
+    .catch(() => dispatch(updateEventFailure()));
+}
+
+export const deleteEvent = (id) => (dispatch, getState) => {
+  dispatch({ type: DELETE_EVENT });
+  
+  eventApi.deleteEvent(id)
+    .then(() => dispatch(deleteEventSuccess()))
+    .catch(() => dispatch(deleteEventFailure()));
 }
 
 export const addNewMessage = (eventId, userId, message) => (dispatch, getState) => {
@@ -71,7 +94,7 @@ export const addNewMessage = (eventId, userId, message) => (dispatch, getState) 
   eventApi.addMessage(eventId, userId, message)
     .then(() => dispatch(addNewMessageSuccess()))
     .then(() => dispatch(getEventMessages(eventId)))
-    .catch(() => dispatch(addNewEventFailure()));
+    .catch(() => dispatch(addNewMessageFailure()));
 }
 
 export const getEventParticipants = (eventId) => (dispatch, getState) => {
@@ -92,8 +115,12 @@ export const getEventMessages = (eventId) => (dispatch, getState) => {
 
 export const getUserEventsSuccess = createAction(GET_USER_EVENTS_SUCCESS);
 export const getUserEventsFailure = createAction(GET_USER_EVENTS_FAILURE);
-export const addNewEventSuccess = createAction(ADD_NEW_EVETN_SUCCESS);
+export const addNewEventSuccess = createAction(ADD_NEW_EVENT_SUCCESS);
 export const addNewEventFailure = createAction(ADD_NEW_EVENT_FAILURE);
+export const updateEventSuccess = createAction(UPDATE_EVENT_SUCCESS);
+export const updateEventFailure = createAction(UPDATE_EVENT_FAILURE);
+export const deleteEventSuccess = createAction(DELETE_EVENT_SUCCESS);
+export const deleteEventFailure = createAction(DELETE_EVENT_FAILURE);
 export const addNewMessageSuccess = createAction(ADD_NEW_MESSAGE_SUCCESS);
 export const addNewMessageFailure = createAction(ADD_NEW_MESSAGE_FAILURE);
 export const getEventParticipantsSuccess = createAction(GET_EVENT_PARTICIPANTS_SUCCESS);

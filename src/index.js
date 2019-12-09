@@ -8,7 +8,7 @@ import {
 } from 'connected-react-router';
 import { Router } from 'react-router-dom';
 import thunk from 'redux-thunk';
-import { createBrowserHistory } from 'history'
+import { createBrowserHistory } from 'history';
 import createRootReducer from './state';
 import './index.css';
 import App from './App';

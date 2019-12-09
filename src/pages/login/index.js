@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { logIn } from '../../state/session-user';
+import LoginFail from '../../components/login-fail';
+import { logIn, closeLoginFailWindow } from '../../state/session-user';
 import './styles.css';
 
 class LoginPage extends Component {
@@ -28,25 +29,38 @@ class LoginPage extends Component {
   onLogin = () => {
     const user = this.state;
     this.props.logIn(user);
+    this.setState({
+      username: '',
+      password: ''
+    });
   } 
 
+  closeWindow = () => {
+    this.props.closeLoginFailWindow();
+  }
+
   render() {
+    const { invalidLogin } = this.props;
+    console.log(invalidLogin);
     return (
       <div className='login-page'>
-          <div className='login'>
-            <span> Login </span> 
-            <input className='login-input' onChange={this.onHandleUserName} />
-            <span> Hasło </span> 
-            <input type='password' className='login-input' onChange={this.onHandlePassword} />
-            <button className='login-button' onClick={this.onLogin} > Zaloguj </button>
-            <div className='line'>
-              <div className='line-element' /> 
-              Nie masz jeszcze konta?
-              <div className='line-element' /> 
-            </div>
-            <div>
-              <button className='login-button' onClick={() => this.goToAnotherPage('/registration')}> Zarejestruj się </button>
-            </div>
+        <div className='login'>
+          <span> Login </span> 
+          <input className='login-input' onChange={this.onHandleUserName} value={this.state.username} />
+          <span> Hasło </span> 
+          <input type='password' className='login-input' onChange={this.onHandlePassword} value={this.state.password} />
+          <button className='login-button' onClick={this.onLogin} > Zaloguj </button>
+          <div className='line'>
+            <div className='line-element' /> 
+            Nie masz jeszcze konta?
+            <div className='line-element' /> 
+          </div>
+          <div>
+            <button className='login-button' onClick={() => this.goToAnotherPage('/registration')}> 
+              Zarejestruj się 
+            </button>
+          </div>
+          {invalidLogin && <LoginFail closeWindow = {this.closeWindow} />}
       </div>
     </div>
     )
@@ -62,7 +76,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   logIn: (user) => dispatch(logIn(user)),
-  onPush: (path) => dispatch(push(path))
+  onPush: (path) => dispatch(push(path)),
+  closeLoginFailWindow: () => dispatch(closeLoginFailWindow())
 });
 
 

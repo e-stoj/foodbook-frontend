@@ -1,0 +1,13 @@
+.registration-fail {
+  position: absolute;
+  top: 35vh;
+  bottom: 35vh;
+  left: 30vw;
+  right: 30vw;
+  padding: 3% 7% 3% 7%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}

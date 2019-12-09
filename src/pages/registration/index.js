@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { register } from '../../state/session-user';
+import RegistrationFail from '../../components/registration-fail';
+import { register, closeRegistrationFailWindow } from '../../state/session-user';
 import './styles.css';
 
 class RegistrationPage extends Component {
@@ -37,26 +38,42 @@ class RegistrationPage extends Component {
 
   onRegister = () => {
     const user = this.state;
-    console.log(user);
     this.props.register(user);
+    this.setState({
+      name: '',
+      surname: '',
+      login: '',
+      password: '',
+      email: ''
+    })
+  }
+
+  closeWindow = () => {
+    this.props.closeRegistrationFailWindow();
   }
 
   render() {
+    const { registrationFail } = this.props;
     return (
       <div className='registration-page'>
-          <div className='register'>
-            <span> Imię </span> 
-            <input className='registration-input' onChange={this.onHandleName} />
-            <span> Nazwisko </span> 
-            <input className='registration-input' onChange={this.onHandleSurname} />
-            <span> Login </span> 
-            <input className='registration-input' onChange={this.onHandleLogin} />
-            <span> Hasło </span> 
-            <input type='password' className='registration-input' onChange={this.onHandlePassword} />
-            <span> e-mail </span> 
-            <input className='registration-input' onChange={this.onHandleEmail} />
-            <button className='login-button' onClick={this.onRegister} > Zarejestruj się </button>    
+        <div className='register'>
+          <span> Imię </span> 
+          <input className='registration-input' onChange={this.onHandleName} value={this.state.name} />
+          <span> Nazwisko </span> 
+          <input className='registration-input' onChange={this.onHandleSurname} value={this.state.surname} />
+          <span> Login </span> 
+          <input className='registration-input' onChange={this.onHandleLogin} value={this.state.login} />
+          <span> Hasło </span> 
+          <input 
+            type='password' 
+            className='registration-input' 
+            onChange={this.onHandlePassword} 
+            value={this.state.password} />
+          <span> e-mail </span> 
+          <input className='registration-input' onChange={this.onHandleEmail} value={this.state.email} />
+          <button className='login-button' onClick={this.onRegister} > Zarejestruj się </button>    
       </div>
+      { registrationFail && <RegistrationFail closeWindow = {this.closeWindow} />}
     </div>
     )
   }
@@ -64,11 +81,12 @@ class RegistrationPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  
+  registrationFail: state.sessionUser.registrationFail
 });
 
 const mapDispatchToProps = {
-  register
+  register,
+  closeRegistrationFailWindow
 };
 
 

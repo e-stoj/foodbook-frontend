@@ -17,6 +17,12 @@ const GET_ALL_MOTIVES_FAILURE = 'locals: get-all-motives-failure';
 export const ADD_NEW_LOCAL = 'locals: add-new-local';
 const ADD_NEW_LOCAL_SUCCESS = 'locals: add-new-local-success';
 const ADD_NEW_LOCAL_FAILURE = 'locals: add-new-local-failure';
+export const UPDATE_LOCAL = 'locals: update-local';
+const UPDATE_LOCAL_SUCCESS = 'locals: update-local-success';
+const UPDATE_LOCAL_FAILURE = 'locals: update-local-failure';
+export const DELETE_LOCAL = 'locals: delete-local';
+const DELETE_LOCAL_SUCCESS = 'locals: delete-local-success';
+const DELETE_LOCAL_FAILURE = 'locals: delete-local-failure';
 export const GET_LOCALS_WITH_SELECTED_MOTIVE = 'locals: get-locals-with-selected-motive';
 const GET_LOCALS_WITH_SELECTED_MOTIVE_SUCCESS = 'locals: get-locals-with-selected-motive-success';
 const GET_LOCALS_WITH_SELECTED_MOTIVE_FAILURE = 'locals: get-locals-with-selected-motive-failure';
@@ -64,6 +70,24 @@ export const addNewLocal = (local) => (dispatch, getState) => {
     .catch(() => dispatch(addNewLocalFailure()));
 }
 
+export const updateLocal = (id) => (dispatch, getState) => {
+  dispatch({ type: UPDATE_LOCAL });
+  
+  localsApi.updateLocal(id)
+    .then(() => dispatch(updateLocalSuccess()))
+    .then(() => dispatch(getAllLocals()))
+    .catch(() => dispatch(updateLocalFailure()));
+}
+
+export const deleteLocal = (id) => (dispatch, getState) => {
+  dispatch({ type: DELETE_LOCAL });
+  
+  localsApi.deleteLocal(id)
+    .then(() => dispatch(deleteLocalSuccess()))
+    .then(() => dispatch(getAllLocals()))
+    .catch(() => dispatch(deleteLocalFailure()));
+}
+
 export const getLocalsWithSelectedMotive = (motive) => (dispatch, getState) => {
   dispatch({ type: GET_LOCALS_WITH_SELECTED_MOTIVE });
 
@@ -78,6 +102,10 @@ export const getAllMotivesSuccess = createAction(GET_ALL_MOTIVES_SUCCESS);
 export const getAllMotivesFailure = createAction(GET_ALL_MOTIVES_FAILURE);
 export const addNewLocalSuccess = createAction(ADD_NEW_LOCAL_SUCCESS);
 export const addNewLocalFailure = createAction(ADD_NEW_LOCAL_FAILURE);
+export const updateLocalSuccess = createAction(UPDATE_LOCAL_SUCCESS);
+export const updateLocalFailure = createAction(UPDATE_LOCAL_FAILURE);
+export const deleteLocalSuccess = createAction(DELETE_LOCAL_SUCCESS);
+export const deleteLocalFailure = createAction(DELETE_LOCAL_FAILURE);
 export const getLocalsWithSelectedMotiveSuccess = createAction(GET_LOCALS_WITH_SELECTED_MOTIVE_SUCCESS);
 export const getLocalsWithSelectedMotiveFailure = createAction(GET_LOCALS_WITH_SELECTED_MOTIVE_FAILURE);
 

@@ -6,19 +6,40 @@ const initialState = {
   online: false,
   invalidLogin: false,
   activeUser: {},
-  registrationPage: true
+  registrationFail: false
 };
 
 export const REGISTER = 'session-user: register';
 const REGISTER_SUCCESS = 'session-user: register-success';
 const REGISTER_FAILURE = 'session-user: register-failure';
+const CLOSE_REGISTRATION_FAIL_WINDOW = 'session-user: close-registration-fail-window';
 export const LOGIN = 'session-user: login';
 const LOGIN_SUCCESS = 'session-user: login-success';
 const LOGIN_FAILURE = 'session-user: login-failure';
+const CLOSE_LOGIN_FAIL_WINDOW = 'session-user: close-login-fail-window';
 export const LOGOUT = 'session-user: logout';
-export const GO_TO_REGISTRATION_PAGE = 'session-user: go-to-registration-page';
 
 export const sessionUserReducer = handleActions({
+  [REGISTER]: (state, { payload }) => ({
+    ...state,
+    registrationFail: false
+  }),
+
+  [REGISTER_SUCCESS]: (state, { payload }) => ({
+    ...state,
+    registrationFail: false
+  }),
+
+  [REGISTER_FAILURE]: (state, { payload }) => ({
+    ...state,
+    registrationFail: true
+  }),
+
+  [CLOSE_REGISTRATION_FAIL_WINDOW]: (state) => ({
+    ...state,
+    registrationFail: false
+  }),
+  
   [LOGIN]: (state, { payload }) => ({
     ...state,
     invalidLogin: false
@@ -36,16 +57,17 @@ export const sessionUserReducer = handleActions({
     invalidLogin: true
   }),
 
+  [CLOSE_LOGIN_FAIL_WINDOW]: (state) => ({
+    ...state,
+    invalidLogin: false
+  }),
+
   [LOGOUT]: (state) => ({
     ...state,
     online: false,
     activeUser: {}
   }),
 
-  [GO_TO_REGISTRATION_PAGE]: (state, { payload }) => ({
-    ...state,
-    registrationPage: !state.registrationPage
-  }),
 }, initialState);
 
 export const logIn = (encodedUser) => (dispatch, getState) => {
@@ -68,9 +90,10 @@ export const register = (user) => (dispatch, getState) => {
 
 export const registerSuccess = createAction(REGISTER_SUCCESS);
 export const registerFailure = createAction(REGISTER_FAILURE);
+export const closeRegistrationFailWindow = createAction(CLOSE_REGISTRATION_FAIL_WINDOW);
 export const loginSuccess = createAction(LOGIN_SUCCESS);
 export const loginFailure = createAction(LOGIN_FAILURE);
+export const closeLoginFailWindow = createAction(CLOSE_LOGIN_FAIL_WINDOW);
 export const logout = createAction(LOGOUT);
-export const goToRegistrationPage = createAction(GO_TO_REGISTRATION_PAGE);
 
 

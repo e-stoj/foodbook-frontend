@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import Local from '../../components/local';
 import { getAllLocals, getAllMotives, addNewLocal } from '../../state/locals/index';
 import { logout } from '../../state/session-user/index';
 import './styles.css';
@@ -11,6 +12,7 @@ class LocalsPage extends Component {
     super(props);
     this.state = {
       showAddLocalWindow: false,
+      showUpdateLocalWindow: false,
       motivesList: [],
       name: '',
       address: '',
@@ -37,7 +39,6 @@ class LocalsPage extends Component {
         motivesList.splice(index, 1);
       }
     }
-    console.log(motivesList);
     this.setState({ motivesList: motivesList });
   }
 
@@ -53,12 +54,20 @@ class LocalsPage extends Component {
     this.setState({ phoneNumber: event.target.value });
   }
 
-  onCloseWindow = () => {
+  onCloseAddWindow = () => {
     this.setState({ showAddLocalWindow: false });
   }
 
-  onShowWindow = () => {
+  onShowAddWindow = () => {
     this.setState({ showAddLocalWindow: true });
+  }
+
+  onCloseUpdateWindow = () => {
+    this.setState({ showUpdateLocalWindow: false });
+  }
+
+  onShowUpdateWindow = () => {
+    this.setState({ showUpdateLocalWindow: true });
   }
 
   onAddLocal = () => {
@@ -73,6 +82,10 @@ class LocalsPage extends Component {
     this.onCloseWindow();
   }
 
+  onUpdateLocal = () => {
+
+  }
+
   onLogout = () => {
     this.props.logout();
     this.goToAnotherPage('/login');
@@ -80,7 +93,7 @@ class LocalsPage extends Component {
  
   render() {
     const { locals, motives } = this.props;
-    const { showAddLocalWindow } = this.state;
+    const { showAddLocalWindow, showUpdateLocalWindow } = this.state;
     console.log(locals);
     return (
       <div className='search-page'>
@@ -93,7 +106,7 @@ class LocalsPage extends Component {
           </div>
           <div className='search-friends'>
             {locals.map(local => (
-              <div className='local-element'>
+              <div className='local-element' onClick={this.onShowUpdateWindow}>
                 <div>{ local.name } </div>
                 <div>{ local.address} </div>
                 <div>{ local.phoneNumber } </div>
@@ -101,34 +114,35 @@ class LocalsPage extends Component {
               </div>
             ))}
             <div>
-              <button className='login-button' onClick={this.onShowWindow}>Dodaj lokal</button> 
+              <button className='login-button' onClick={this.onShowAddWindow}>Dodaj lokal</button> 
             </div>
             {showAddLocalWindow && 
-            <div className='add-local'>
-              <div className='close-panel'>
-              <button className='close-button' onClick={this.onCloseWindow}>X</button>
-              </div>  
-              <div>
-              <span> Nazwa: </span> 
-              <input onChange={this.onHandleLocalName} />
-              </div>
-              <div>
-              <span> Adres: </span>
-              <input onChange={this.onHandleLocalAddress} />
-              </div>
-              <div>
-              <span> Numer telefonu: </span>
-              <input onChange={this.onHandleLocalPhoneNumber} />
-              </div>
-              <div className='motives-list'>
-              { motives.map(motive => 
-              <label>
-                <input onChange={this.onChange} type='checkbox' value={motive} />
-                {motive}
-              </label>)}
-              </div>
-              <button className='login-button' onClick={this.onAddLocal}>Dodaj</button> 
-            </div>
+            <Local 
+              type = 'Dodaj'
+              onCloseWindow = {this.onCloseAddWindow}
+              onHandleLocalName = {this.onHandleLocalName}
+              onHandleLocalAddress = {this.onHandleLocalAddress}
+              onHandleLocalPhoneNumber = {this.onHandleLocalPhoneNumber}
+              onChange = {this.onChange}
+              motives = {motives}
+              onAddLocal = {this.onAddLocal}
+              localName = {this.state.localName}
+              localAddress = {this.state.address}
+              localPhoneNumber = {this.state.phoneNumber} />
+            }
+            {showUpdateLocalWindow && 
+            <Local 
+              type = 'Zaktualizuj'
+              onCloseWindow = {this.onCloseUpdateWindow}
+              onHandleLocalName = {this.onHandleLocalName}
+              onHandleLocalAddress = {this.onHandleLocalAddress}
+              onHandleLocalPhoneNumber = {this.onHandleLocalPhoneNumber}
+              onChange = {this.onChange}
+              motives = {motives}
+              onAddLocal = {this.onUpdateLocal}
+              localName = {this.state.localName}
+              localAddress = {this.state.address}
+              localPhoneNumber = {this.state.phoneNumber} />
             }
           </div>
       </div>

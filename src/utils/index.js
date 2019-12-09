@@ -6,6 +6,11 @@ export const post = (url, body) => fetch(url, {
   headers: {
     'Content-Type': 'application/json'
   }
+}).then(response => {
+  if (!response.ok) {
+    throw Error(response.statusText);
+  }
+  return response;
 });
 
 export const toJSON = (response) => (response.json());

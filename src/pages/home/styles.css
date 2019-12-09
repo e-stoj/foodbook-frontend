@@ -35,3 +35,8 @@
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 12px;
 }
+
+.friend {
+  border-bottom: 1px solid rgb(175, 175, 175);
+  font-weight: 300;
+}
