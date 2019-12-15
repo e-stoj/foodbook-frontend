@@ -40,3 +40,26 @@
   border-bottom: 1px solid rgb(175, 175, 175);
   font-weight: 300;
 }
+
+.event-header {
+  position: relative;
+}
+
+.activities-buttons {
+  position: absolute;
+  right: 5px;
+  top: 0;
+}
+
+.activities-buttons svg {
+  margin: auto 5px;
+}
+
+.edit-event-window {
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  right: 10%;
+  left: 10%;
+  background-color: white;
+}

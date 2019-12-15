@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Local from '../../components/local';
-import { getAllLocals, getAllMotives, addNewLocal } from '../../state/locals/index';
+import DeleteLocalFail from '../../components/delete-local-fail';
+import { 
+  getAllLocals, 
+  getAllMotives, 
+  addNewLocal, 
+  updateLocal, 
+  deleteLocal,
+  closeDeleteFailWindow } from '../../state/locals/index';
 import { logout } from '../../state/session-user/index';
 import './styles.css';
 
@@ -11,6 +20,7 @@ class LocalsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      local: {},
       showAddLocalWindow: false,
       showUpdateLocalWindow: false,
       motivesList: [],
@@ -30,7 +40,7 @@ class LocalsPage extends Component {
   }
 
   onChange = (event) => {
-    const motivesList = this.state.motivesList;
+    const motivesList = this.state.selectedMotives;
     if(event.target.checked === true) {
       motivesList.push(event.target.value);
     } else {
@@ -39,7 +49,7 @@ class LocalsPage extends Component {
         motivesList.splice(index, 1);
       }
     }
-    this.setState({ motivesList: motivesList });
+    this.setState({ selectedMotives: motivesList });
   }
 
   onHandleLocalName = (event) => {
@@ -59,15 +69,28 @@ class LocalsPage extends Component {
   }
 
   onShowAddWindow = () => {
-    this.setState({ showAddLocalWindow: true });
+    this.setState({ 
+      showAddLocalWindow: true,
+      selectedMotives: [],
+      name: '',
+      address: '',
+      phoneNumber: '',
+     });
   }
 
   onCloseUpdateWindow = () => {
     this.setState({ showUpdateLocalWindow: false });
   }
 
-  onShowUpdateWindow = () => {
-    this.setState({ showUpdateLocalWindow: true });
+  onShowUpdateWindow = (local) => {
+    this.setState({ 
+      local: local,
+      showUpdateLocalWindow: true,
+      selectedMotives: local.motives,
+      name: local.name,
+      address: local.address,
+      phoneNumber: local.phoneNumber,
+    });
   }
 
   onAddLocal = () => {
@@ -75,26 +98,43 @@ class LocalsPage extends Component {
       name: this.state.name,
       address: this.state.address,
       phoneNumber: this.state.phoneNumber,
-      motives: this.state.motivesList,
+      motives: this.state.selectedMotives,
     }
 
     this.props.addNewLocal(local);
-    this.onCloseWindow();
+    this.onCloseAddWindow();
   }
 
   onUpdateLocal = () => {
+    const { local } = this.state;
+    const newLocal = {
+      name: this.state.name,
+      address: this.state.address,
+      phoneNumber: this.state.phoneNumber,
+      motives: this.state.selectedMotives,
+    }
+    this.props.updateLocal(local.localId, newLocal);
+    this.onCloseUpdateWindow();
+  }
 
+  onDeleteLocal = (local, e) => {
+    e.stopPropagation();
+    this.props.deleteLocal(local.localId);
   }
 
   onLogout = () => {
     this.props.logout();
     this.goToAnotherPage('/login');
   }
+
+  onCloseFailWindow = () => {
+    this.props.closeDeleteFailWindow();
+  }
  
   render() {
-    const { locals, motives } = this.props;
-    const { showAddLocalWindow, showUpdateLocalWindow } = this.state;
-    console.log(locals);
+    const { locals, motives, deleteFail } = this.props;
+    const { showAddLocalWindow, showUpdateLocalWindow, local } = this.state;
+    console.log(local);
     return (
       <div className='search-page'>
           <div className='header'>
@@ -106,10 +146,11 @@ class LocalsPage extends Component {
           </div>
           <div className='search-friends'>
             {locals.map(local => (
-              <div className='local-element' onClick={this.onShowUpdateWindow}>
-                <div>{ local.name } </div>
-                <div>{ local.address} </div>
-                <div>{ local.phoneNumber } </div>
+              <div className='local-element' onClick={() => this.onShowUpdateWindow(local)}>
+                <FontAwesomeIcon icon = {faTrashAlt} onClick={(e) => this.onDeleteLocal(local, e)} />
+                <div>Nazwa lokalu: <span> { local.name } </span> </div>
+                <div>Adres: <span> { local.address } </span> </div>
+                <div>Numer telefonu: <span> { local.phoneNumber } </span> </div>
                 <div>{ local.motives.map(motive => <span> {motive} </span>)} </div>
               </div>
             ))}
@@ -126,9 +167,10 @@ class LocalsPage extends Component {
               onChange = {this.onChange}
               motives = {motives}
               onAddLocal = {this.onAddLocal}
-              localName = {this.state.localName}
-              localAddress = {this.state.address}
-              localPhoneNumber = {this.state.phoneNumber} />
+              name = {this.state.name}
+              address = {this.state.address}
+              phoneNumber = {this.state.phoneNumber}
+              selectedMotives = {this.state.selectedMotives} />
             }
             {showUpdateLocalWindow && 
             <Local 
@@ -140,10 +182,12 @@ class LocalsPage extends Component {
               onChange = {this.onChange}
               motives = {motives}
               onAddLocal = {this.onUpdateLocal}
-              localName = {this.state.localName}
-              localAddress = {this.state.address}
-              localPhoneNumber = {this.state.phoneNumber} />
+              name = {this.state.name}
+              address = {this.state.address}
+              phoneNumber = {this.state.phoneNumber}
+              selectedMotives = {this.state.selectedMotives} />
             }
+            {deleteFail && <DeleteLocalFail closeWindow={this.onCloseFailWindow} /> }
           </div>
       </div>
     
@@ -154,7 +198,8 @@ class LocalsPage extends Component {
 
 const mapStateToProps = (state) => ({
   locals: state.locals.localsList,
-  motives: state.locals.motivesList
+  motives: state.locals.motivesList,
+  deleteFail: state.locals.deleteFail
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -162,6 +207,9 @@ const mapDispatchToProps = (dispatch) => ({
   getAllLocals: () => dispatch(getAllLocals()),
   getAllMotives: () => dispatch(getAllMotives()),
   addNewLocal: (local) => dispatch(addNewLocal(local)),
+  updateLocal: (id, newLocal) => dispatch(updateLocal(id, newLocal)),
+  deleteLocal: (id) => dispatch(deleteLocal(id)),
+  closeDeleteFailWindow: () => dispatch(closeDeleteFailWindow()),
   logout: () => dispatch(logout())
 });
 

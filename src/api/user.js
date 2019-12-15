@@ -6,3 +6,4 @@ export const addFriend = (id, friend) => put(`http://localhost:8000/users/${id}`
 
 export const getUserFriends = (id) => get(`http://localhost:8000/users/${id}/friends`).then(toJSON);
 
+export const deleteFriend = (id, friend) => put(`http://localhost:8000/users/${id}/friends`, friend).then(toJSON);

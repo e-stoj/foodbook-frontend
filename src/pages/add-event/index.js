@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import DatePicker from 'react-date-picker';
-import TimePicker from 'react-time-picker';
+import EventForm from '../../components/event-form';
 import { getUserFriends } from '../../state/user';
 import { getAllMotives, getLocalsWithSelectedMotive, getAllLocals } from '../../state/locals';
 import { logout } from '../../state/session-user/index';
@@ -28,6 +27,7 @@ class AddEventPage extends Component {
     this.props.getUserFriends(currentUser.userId);
     this.props.getAllMotives();
     this.props.getAllLocals();
+    console.log(this.props.locals);
   }
 
   goToAnotherPage = (path) => {
@@ -48,12 +48,9 @@ class AddEventPage extends Component {
   }
 
   getDate = (value) => {
-    console.log(value.getYear());
     const month = value.getMonth() + 1 < 10 ? `0${value.getMonth() + 1}` : `${value.getMonth() + 1}`; 
     const year = value.getYear() + 1900;
-    console.log(year);
     const date = `${year}-${month}-${value.getDate()}`;
-    console.log(date);
     this.setState({ date: date });
   }
 
@@ -71,6 +68,7 @@ class AddEventPage extends Component {
   }
 
   onMotiveChange = (event) => {
+    console.log(event.target.value);
     this.setState({ motive: event.target.value });
     this.props.getLocalsWithSelectedMotive(event.target.value);
   }
@@ -88,55 +86,33 @@ class AddEventPage extends Component {
       motive: this.state.motive,
     }
     const query = `?ids=${this.state.participants}`;
-    console.log(event);
     this.props.addNewEvent(this.state.local, event, query);
   }
 
   render() {
-    const { friendsList, motives, filteredLocals, locals } = this.props;
+    const { friendsList, motives, locals } = this.props;
+    console.log(friendsList);
     return (
       <div className='add-event-page'>
-          <div className='header'>
-            <span onClick={() => this.goToAnotherPage('/home')} > Strona główna </span>
-            <span onClick={() => this.goToAnotherPage('/add-event')} > Stwórz wydarzenie </span>
-            <span onClick={() => this.goToAnotherPage('/search')}> Szukaj znajomych </span>
-            <span onClick={() => this.goToAnotherPage('/locals')}> Lista lokali </span> 
-            <span onClick={this.onLogout}> Wyloguj </span>
-          </div>
-          <div className='add-event'>
-            <div className='add-event-whole'>
-            <div className='add-event-left'>
-              <span className='add-event-span'>Nazwa</span>
-              <input className='add-event-input' onChange={this.onHandleName} />
-              <span className='add-event-span'>Data</span>
-              <DatePicker
-                onChange={this.getDate}
-                format="y-MM-dd" />
-              <span className='add-event-span'>Godzina</span>
-              <TimePicker onChange={this.getTime} />
-              <span className='add-event-span'>Motyw przewodni</span>
-              <select onChange={this.onMotiveChange}>
-                <option />
-                {motives.map(motive => <option key={motive}>{motive}</option>)}
-              </select>
-              <span className='add-event-span'>Lokal</span>
-              <select onChange={this.onLocalChange}>
-                <option />
-                {locals.map(local => <option value={local.localId}>{local.name}</option>)}
-              </select>
-            </div>
-            <div className='add-event-right'>
-              <span className='add-event-span'>Wybierz znajomych z listy</span>
-              {friendsList.map(friend => (
-                  <label key={friend.userId}>
-                    <input onChange={this.onChange} type='checkbox' value={friend.userId} />
-                    {friend.name} {friend.surname}
-                  </label>
-                ))}
-            </div>
-            </div>
-            <button className='add-event-button' onClick={this.onAddEvent}>Dodaj</button>
-          </div>
+        <div className='header'>
+          <span onClick={() => this.goToAnotherPage('/home')} > Strona główna </span>
+          <span onClick={() => this.goToAnotherPage('/add-event')} > Stwórz wydarzenie </span>
+          <span onClick={() => this.goToAnotherPage('/search')}> Szukaj znajomych </span>
+          <span onClick={() => this.goToAnotherPage('/locals')}> Lista lokali </span> 
+          <span onClick={this.onLogout}> Wyloguj </span>
+        </div>
+        <EventForm
+          type = 'Dodaj'
+          onHandleName = {this.onHandleName} 
+          getDate = {this.getDate}
+          getTime = {this.getTime} 
+          onMotiveChange = {this.onMotiveChange}
+          motives = {motives} 
+          onLocalChange = {this.onLocalChange}
+          locals = {locals}
+          friendsList = {friendsList}
+          onChange = {this.onChange}
+          buttonEvent = {this.onAddEvent} /> 
       </div>
     
     )

@@ -7,6 +7,7 @@ const initialState = {
   participants: [],
   messages: [],
   showEventPage: false,
+  confirmations: []
 };
 
 export const GET_USER_EVENTS = 'events: get-user-events';
@@ -30,6 +31,12 @@ const GET_EVENT_PARTICIPANTS_FAILURE = 'events: get-event-participants-failure';
 export const GET_EVENT_MESSAGES = 'events: get-event-messages';
 const GET_EVENT_MESSAGES_SUCCESS = 'events: get-event-messages-success';
 const GET_EVENT_MESSAGES_FAILURE = 'events: get-event-messages-failure';
+export const GET_CONFIRMATIONS_OF_EVENT = 'events: get-confirmations-of-event';
+const GET_CONFIRMATIONS_OF_EVENT_SUCCESS = 'events: get-confirmations-of-event-success';
+const GET_CONFIRMATIONS_OF_EVENT_FAILURE = 'events: get-confirmations-of-event-failure';
+export const CHANGE_CONFIRMATION = 'events: change-confirmation';
+const CHANGE_CONFIRMATION_SUCCESS = 'events: change-confirmation-success';
+const CHANGE_CONFIRMATION_FAILURE = 'events: change-confirmation-failure';
 export const HANDLE_OPEN_EVENT_PAGE = 'events: handle-open-event-page';
 
 export const eventReducer = handleActions({
@@ -48,9 +55,26 @@ export const eventReducer = handleActions({
     messages: payload
   }),
 
+  [GET_CONFIRMATIONS_OF_EVENT_SUCCESS]: (state, { payload }) => ({
+    ...state, 
+    confirmations: payload
+  }),
+
   [HANDLE_OPEN_EVENT_PAGE]: (state) => ({
     ...state,
     showEventPage: !state.showEventPage
+  }),
+
+  [ADD_NEW_MESSAGE_SUCCESS]: (state) => ({
+    ...state,
+  }),
+
+  [ADD_NEW_EVENT_SUCCESS]: (state) => ({
+    ...state,
+  }),
+
+  [DELETE_EVENT_SUCCESS]: (state) => ({
+    ...state,
   }),
 
 }, initialState);
@@ -63,7 +87,7 @@ export const getUserEvents = (id) => (dispatch, getState) => {
     .catch(() => dispatch(getUserEventsFailure()));
 }
 
-export const addNewEvent = (localId, event, query) => (dispatch, getState) => {
+export const addNewEvent = (localId, event, query) => async (dispatch, getState) => {
   dispatch({ type: ADD_NEW_EVENT });
   
   eventApi.addEvent(localId, event, query)
@@ -72,19 +96,20 @@ export const addNewEvent = (localId, event, query) => (dispatch, getState) => {
     .catch(() => dispatch(addNewEventFailure()));
 }
 
-export const updateEvent = (id) => (dispatch, getState) => {
+export const updateEvent = (id, event) => (dispatch, getState) => {
   dispatch({ type: UPDATE_EVENT });
   
-  eventApi.updateEvent(id)
+  eventApi.updateEvent(id, event)
     .then(() => dispatch(updateEventSuccess()))
     .catch(() => dispatch(updateEventFailure()));
 }
 
-export const deleteEvent = (id) => (dispatch, getState) => {
+export const deleteEvent = (eventId, userId) => (dispatch, getState) => {
   dispatch({ type: DELETE_EVENT });
   
-  eventApi.deleteEvent(id)
+  eventApi.deleteEvent(eventId)
     .then(() => dispatch(deleteEventSuccess()))
+    .then(() => dispatch(getUserEvents(userId)))
     .catch(() => dispatch(deleteEventFailure()));
 }
 
@@ -113,6 +138,23 @@ export const getEventMessages = (eventId) => (dispatch, getState) => {
     .catch(() => dispatch(getEventMessagesFailure()));
 }
 
+export const getConfirmationsOfEvent = (eventId) => (dispatch, getState) => {
+  dispatch({ type: GET_CONFIRMATIONS_OF_EVENT });
+
+  eventApi.getConfirmationsOfEvent(eventId) 
+    .then((confirmation) => dispatch(getConfirmationsOfEventSuccess(confirmation)))
+    .catch(() => dispatch(getConfirmationsOfEventFailure()))
+}
+
+export const changeConfirmation = (eventId, userId, confirmation) => (dispatch, getState) => {
+  dispatch({ type: CHANGE_CONFIRMATION });
+
+  eventApi.changeConfirmation(eventId, userId, confirmation) 
+    .then((confirmation) => dispatch(changeConfirmationSuccess(confirmation)))
+    .then(() => dispatch(getConfirmationsOfEvent(eventId)))
+    .catch(() => dispatch(changeConfirmationFailure()))
+}
+
 export const getUserEventsSuccess = createAction(GET_USER_EVENTS_SUCCESS);
 export const getUserEventsFailure = createAction(GET_USER_EVENTS_FAILURE);
 export const addNewEventSuccess = createAction(ADD_NEW_EVENT_SUCCESS);
@@ -127,6 +169,10 @@ export const getEventParticipantsSuccess = createAction(GET_EVENT_PARTICIPANTS_S
 export const getEventParticipantsFailure = createAction(GET_EVENT_PARTICIPANTS_FAILURE);
 export const getEventMessagesSuccess = createAction(GET_EVENT_MESSAGES_SUCCESS);
 export const getEventMessagesFailure = createAction(GET_EVENT_MESSAGES_FAILURE);
+export const getConfirmationsOfEventSuccess = createAction(GET_CONFIRMATIONS_OF_EVENT_SUCCESS);
+export const getConfirmationsOfEventFailure = createAction(GET_CONFIRMATIONS_OF_EVENT_FAILURE);
+export const changeConfirmationSuccess = createAction(CHANGE_CONFIRMATION_SUCCESS);
+export const changeConfirmationFailure = createAction(CHANGE_CONFIRMATION_FAILURE);
 export const handleOpenEventPage = createAction(HANDLE_OPEN_EVENT_PAGE);
 
 

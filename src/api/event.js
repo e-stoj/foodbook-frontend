@@ -5,8 +5,8 @@ export const getUserEvents = (id) => get(`http://localhost:8000/users/${id}/even
 export const addEvent = (localId, event, query) => 
   post(`http://localhost:8000/locals/${localId}/add-event${query}`, event).then(toJSON);
   
-export const updateEvent = (id) => 
-  put(`http://localhost:8000/events/${id}`).then(toJSON);
+export const updateEvent = (id, event) => 
+  put(`http://localhost:8000/events/${id}`, event).then(toJSON);
 
 export const deleteEvent = (id) => 
   del(`http://localhost:8000/events/${id}`).then(toJSON);
@@ -19,3 +19,9 @@ export const getEventParticipants = (eventId) =>
   
 export const getEventMessages = (eventId) => 
   get(`http://localhost:8000/events/${eventId}/messages`).then(toJSON);
+
+  export const getConfirmationsOfEvent = (eventId) => 
+  get(`http://localhost:8000/events/${eventId}/confirm`).then(toJSON);
+
+  export const changeConfirmation = (eventId, userId, confirmation) => 
+  put(`http://localhost:8000/events/${eventId}/confirm/${userId}`, confirmation).then(toJSON);

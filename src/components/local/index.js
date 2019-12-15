@@ -10,9 +10,10 @@ const Local = ({
     onChange,
     motives,
     onAddLocal,
-    localName,
-    localAddress,
-    localPhoneNumber 
+    name, 
+    address,
+    phoneNumber,
+    selectedMotives
   }) => (
   <div className='add-local'>
     <div className='close-panel'>
@@ -20,20 +21,20 @@ const Local = ({
     </div>  
     <div>
       <span> Nazwa: </span> 
-      <input onChange={onHandleLocalName} value={localName} />
+      <input onChange={onHandleLocalName} value={name} />
     </div>
     <div>
       <span> Adres: </span>
-      <input onChange={onHandleLocalAddress} value={localAddress} />
+      <input onChange={onHandleLocalAddress} value={address} />
     </div>
     <div>
       <span> Numer telefonu: </span>
-      <input onChange={onHandleLocalPhoneNumber} value={localPhoneNumber} />
+      <input onChange={onHandleLocalPhoneNumber} value={phoneNumber} />
     </div>
     <div className='motives-list'>
     { motives.map(motive => 
       <label>
-        <input onChange={onChange} type='checkbox' value={motive} />
+        <input onChange={onChange} type='checkbox' value={motive} checked = {selectedMotives.find((m) => m === motive)} />
         {motive}
       </label>)}
     </div>

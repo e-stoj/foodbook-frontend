@@ -5,7 +5,7 @@ import * as localsApi from '../../api/locals';
 const initialState = {
   localsList: [],
   motivesList: [],
-  filteredLocals: []
+  deleteFail: false
 };
 
 export const GET_ALL_LOCALS = 'locals: get-all-locals';
@@ -26,6 +26,7 @@ const DELETE_LOCAL_FAILURE = 'locals: delete-local-failure';
 export const GET_LOCALS_WITH_SELECTED_MOTIVE = 'locals: get-locals-with-selected-motive';
 const GET_LOCALS_WITH_SELECTED_MOTIVE_SUCCESS = 'locals: get-locals-with-selected-motive-success';
 const GET_LOCALS_WITH_SELECTED_MOTIVE_FAILURE = 'locals: get-locals-with-selected-motive-failure';
+export const CLOSE_DELETE_FAIL_WINDOW = 'locals: close-delete-fail-window';
 
 export const localsReducer = handleActions({
   [GET_ALL_LOCALS_SUCCESS]: (state, { payload }) => ({
@@ -40,7 +41,17 @@ export const localsReducer = handleActions({
 
   [GET_LOCALS_WITH_SELECTED_MOTIVE_SUCCESS]: (state, { payload }) => ({
     ...state,
-    filteredLocals: payload
+    localsList: payload
+  }),
+
+  [DELETE_LOCAL_FAILURE]: (state) => ({
+    ...state,
+    deleteFail: true
+  }),
+
+  [CLOSE_DELETE_FAIL_WINDOW]: (state) => ({
+    ...state,
+    deleteFail: false
   })
 
 }, initialState);
@@ -70,10 +81,10 @@ export const addNewLocal = (local) => (dispatch, getState) => {
     .catch(() => dispatch(addNewLocalFailure()));
 }
 
-export const updateLocal = (id) => (dispatch, getState) => {
+export const updateLocal = (id, local) => (dispatch, getState) => {
   dispatch({ type: UPDATE_LOCAL });
   
-  localsApi.updateLocal(id)
+  localsApi.updateLocal(id, local)
     .then(() => dispatch(updateLocalSuccess()))
     .then(() => dispatch(getAllLocals()))
     .catch(() => dispatch(updateLocalFailure()));
@@ -108,5 +119,6 @@ export const deleteLocalSuccess = createAction(DELETE_LOCAL_SUCCESS);
 export const deleteLocalFailure = createAction(DELETE_LOCAL_FAILURE);
 export const getLocalsWithSelectedMotiveSuccess = createAction(GET_LOCALS_WITH_SELECTED_MOTIVE_SUCCESS);
 export const getLocalsWithSelectedMotiveFailure = createAction(GET_LOCALS_WITH_SELECTED_MOTIVE_FAILURE);
+export const closeDeleteFailWindow = createAction(CLOSE_DELETE_FAIL_WINDOW);
 
 

@@ -36,4 +36,9 @@ export const del = (url) => fetch(url, {
   method: 'DELETE',
   'credentials': 'include',
   mode: 'cors',
+}).then(response => {
+  if (!response.ok) {
+    throw Error(response.statusText);
+  }
+  return response;
 });

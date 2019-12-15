@@ -6,7 +6,7 @@ export const getAllMotives = () => get(`http://localhost:8000/locals/motives`).t
 
 export const addLocal = (local) => post(`http://localhost:8000/locals`, local).then(toJSON);
 
-export const updateLocal = (id) => put(`http://localhost:8000/locals/${id}`).then(toJSON);
+export const updateLocal = (id, local) => put(`http://localhost:8000/locals/${id}`, local).then(toJSON);
 
 export const deleteLocal = (id) => del(`http://localhost:8000/locals/${id}`).then(toJSON);
 

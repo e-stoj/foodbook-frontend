@@ -18,6 +18,24 @@
   min-width: 30%;
 }
 
+.confirm-participation {
+  border: solid 1px rgb(228, 228, 228);
+  width: 100%;
+}
+
+.confirmation-icons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.confirmation-icons svg {
+  padding: 3px;
+}
+
+.selected {
+  background: #ccc;
+}
+
 .messages {
   min-width: 70%;
 }
