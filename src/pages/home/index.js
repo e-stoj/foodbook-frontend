@@ -133,7 +133,7 @@ class HomePage extends Component {
             <div className='friends-list'>
               <span>Lista znajomych użytkownika { activeUser.name } {activeUser.surname}</span>
               {friends && friends.map(friend => 
-              <div> 
+              <div className='friend-details'> 
                 <div className='friend'>{friend.name} {friend.surname}</div> 
                 <FontAwesomeIcon icon = {faTrashAlt} onClick={() => this.onDeleteFriend(friend)} /> 
               </div>)}
