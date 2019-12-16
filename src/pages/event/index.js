@@ -30,14 +30,12 @@ class Event extends Component {
   }
 
   getMessageText = (event) => {
-    console.log(event.target.value);
     this.setState({ text: event.target.value });
   }
 
   sendMessage = () => {
     this.props.addNewMessage(this.props.event.eventId, this.props.currentUser.userId, this.state);
     this.setState({ text: '' });
-    this.props.getEventMessages(this.props.event.eventId);
   }
 
   onChooseParticipationIcon = (confirmation) => {
@@ -48,7 +46,6 @@ class Event extends Component {
   getCurrentSelection = (userId) => {
     const { confirmList } = this.props;
     for (let i = 0; i <= _.size(confirmList); i++) {
-      console.log(confirmList[i]);
       if (confirmList[i]) {
         if (confirmList[i].user.userId === userId) {
           return confirmList[i].confirmation;

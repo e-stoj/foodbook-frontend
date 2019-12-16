@@ -48,9 +48,10 @@ class AddEventPage extends Component {
   }
 
   getDate = (value) => {
+    const day = value.getDate() < 10 ? `0${value.getDate()}` : value.getDate();
     const month = value.getMonth() + 1 < 10 ? `0${value.getMonth() + 1}` : `${value.getMonth() + 1}`; 
     const year = value.getYear() + 1900;
-    const date = `${year}-${month}-${value.getDate()}`;
+    const date = `${year}-${month}-${day}`;
     this.setState({ date: date });
   }
 

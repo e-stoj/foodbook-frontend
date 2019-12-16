@@ -1,5 +1,6 @@
 import { handleActions, createAction } from 'redux-actions';
 import { push } from 'react-router-redux';
+import _, { flatten } from 'lodash';
 import * as eventApi from '../../api/event';
 
 const initialState = {
@@ -65,16 +66,15 @@ export const eventReducer = handleActions({
     showEventPage: !state.showEventPage
   }),
 
-  [ADD_NEW_MESSAGE_SUCCESS]: (state) => ({
+  [ADD_NEW_MESSAGE_SUCCESS]: (state, { payload }) => ({
     ...state,
+    messages: _.flatten([state.messages, payload])
   }),
 
-  [ADD_NEW_EVENT_SUCCESS]: (state) => ({
+  [DELETE_EVENT_SUCCESS]: (state, { payload }) => ({
     ...state,
-  }),
-
-  [DELETE_EVENT_SUCCESS]: (state) => ({
-    ...state,
+    eventsList: state.eventsList.filter(
+      event => event.eventId !== payload.eventId)
   }),
 
 }, initialState);
@@ -108,8 +108,7 @@ export const deleteEvent = (eventId, userId) => (dispatch, getState) => {
   dispatch({ type: DELETE_EVENT });
   
   eventApi.deleteEvent(eventId)
-    .then(() => dispatch(deleteEventSuccess()))
-    .then(() => dispatch(getUserEvents(userId)))
+    .then((event) => dispatch(deleteEventSuccess(event)))
     .catch(() => dispatch(deleteEventFailure()));
 }
 
@@ -117,7 +116,7 @@ export const addNewMessage = (eventId, userId, message) => (dispatch, getState) 
   dispatch({ type: ADD_NEW_MESSAGE });
 
   eventApi.addMessage(eventId, userId, message)
-    .then(() => dispatch(addNewMessageSuccess()))
+    .then((message1) => dispatch(addNewMessageSuccess(message1)))
     .then(() => dispatch(getEventMessages(eventId)))
     .catch(() => dispatch(addNewMessageFailure()));
 }

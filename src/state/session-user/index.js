@@ -84,7 +84,6 @@ export const register = (user) => (dispatch, getState) => {
   
   sessionUserApi.register(user)
     .then(() => dispatch(registerSuccess()))
-    .then(() => dispatch(push('/login')))
     .catch(() => dispatch(registerFailure()))
 };
 

@@ -132,14 +132,14 @@ class HomePage extends Component {
           <div className='home'>
             <div className='friends-list'>
               <span>Lista znajomych użytkownika { activeUser.name } {activeUser.surname}</span>
-              {friends.map(friend => 
+              {friends && friends.map(friend => 
               <div> 
                 <div className='friend'>{friend.name} {friend.surname}</div> 
                 <FontAwesomeIcon icon = {faTrashAlt} onClick={() => this.onDeleteFriend(friend)} /> 
               </div>)}
             </div>
             <div className='events'>
-            {events.map(event => 
+            {events && events.map(event => 
               <div onClick={() => this.goToEventPage(event)}>
                 <div className='event-header'>
                   <h4>{event.eventName}</h4>
