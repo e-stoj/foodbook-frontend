@@ -13,6 +13,13 @@ export const post = (url, body) => fetch(url, {
   return response;
 });
 
+export const toJSON1 = (response) => {
+  if (!response.ok) {
+    throw Error(response.statusText);
+  }
+  return JSON.stringify(response);
+};
+
 export const toJSON = (response) => (response.json());
 
 export const get = (url) => fetch(url, {

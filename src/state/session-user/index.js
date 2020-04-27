@@ -25,12 +25,9 @@ export const sessionUserReducer = handleActions({
     registrationFail: false
   }),
 
-  [REGISTER_SUCCESS]: (state, { payload }) => ({
-    ...state,
-    registrationFail: false
-  }),
-
-  [REGISTER_FAILURE]: (state, { payload }) => ({
+  [REGISTER_FAILURE]: (state, { payload }) => 
+  // console.log(payload),
+  ({
     ...state,
     registrationFail: true
   }),
@@ -83,8 +80,9 @@ export const register = (user) => (dispatch, getState) => {
   dispatch({ type: REGISTER });
   
   sessionUserApi.register(user)
-    .then(() => dispatch(registerSuccess()))
-    .catch(() => dispatch(registerFailure()))
+    .then((response) => dispatch(registerSuccess(response)))
+    .then(() => dispatch(push('/login')))
+    .catch((error) => dispatch(registerFailure(error)))
 };
 
 export const registerSuccess = createAction(REGISTER_SUCCESS);
